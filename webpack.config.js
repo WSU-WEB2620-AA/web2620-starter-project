@@ -1,5 +1,14 @@
-const path = require('path');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const path = require('path')
+const glob = require('glob')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+
+const htmlPlugins = glob.sync('./src/**/*.html').map(file => {
+  return new HtmlWebpackPlugin({
+    template: file,
+    filename: file.substring('./src/'.length),
+  })
+})
 
 module.exports = {
   entry: {
@@ -8,10 +17,11 @@ module.exports = {
   mode: 'development',
   devtool: false, //'inline-source-map',
   devServer: {
-    contentBase: path.join(__dirname, 'dist'),
-    // static: path.join(__dirname, 'dist'), // Webpack 5
+    static: path.join(__dirname, 'dist'),
     historyApiFallback: true,
     open: true,
+    liveReload: true,
+    hot: false,
     compress: true,
     port: 8080
   },
@@ -19,7 +29,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     filename: 'javascripts/[name].js',
     publicPath: '/',
-    // clean: true // Webpack 5
+    clean: true
   },
   module: {
     rules: [
@@ -39,7 +49,7 @@ module.exports = {
         test: /\.scss$/,
         use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader']
       }, {
-        test: /\.(html|json|txt|dat|gif|jpg|png|svg|eot|ttf|woff|woff2)$/i,
+        test: /\.(json|txt|dat|gif|jpg|png|svg|eot|ttf|woff|woff2)$/i,
         use: [{
           loader: 'file-loader',
           options: { 
@@ -53,8 +63,9 @@ module.exports = {
     ]
   },
   plugins: [
+    ...htmlPlugins,
     new MiniCssExtractPlugin({
       filename: 'stylesheets/[name].css',
     })
   ]
-};
+}
