@@ -6,7 +6,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const htmlPlugins = glob.sync('./src/**/*.html').map(file => {
   return new HtmlWebpackPlugin({
     template: file,
-    filename: file.substring('./src/'.length),
+    filename: file.substring(`.${path.sep}src${path.sep}`.length),
   })
 })
 
