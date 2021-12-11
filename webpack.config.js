@@ -7,6 +7,7 @@ const htmlPlugins = glob.sync('./src/**/*.html').map(file => {
   return new HtmlWebpackPlugin({
     template: file,
     filename: file.substring(`.${path.sep}src${path.sep}`.length),
+    scriptLoading: 'defer'
   })
 })
 
@@ -49,7 +50,7 @@ module.exports = {
         test: /\.scss$/,
         use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader']
       }, {
-        test: /\.(json|txt|dat|gif|jpg|png|svg|eot|ttf|woff|woff2)$/i,
+        test: /\.(json|txt|dat|png|jpg|jpeg|gif|svg|eot|ttf|woff|woff2)$/i,
         use: [{
           loader: 'file-loader',
           options: { 
